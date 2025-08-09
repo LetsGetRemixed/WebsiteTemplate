@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import SearchBar from './SearchBar';
 import { 
   Bars3Icon, 
   XMarkIcon,
@@ -16,6 +17,12 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleSearch = (query) => {
+    // Navigate to search results page or handle search
+    console.log('Searching for:', query);
+    // You can implement search functionality here
   };
 
   const navigation = [
@@ -45,6 +52,11 @@ const Navbar = () => {
                 </Link>
               ))}
             </div>
+          </div>
+          
+          {/* Search Bar */}
+          <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
+            <SearchBar onSearch={handleSearch} placeholder="Search..." />
           </div>
           
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
@@ -96,6 +108,11 @@ const Navbar = () => {
       {isOpen && (
         <div className="sm:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1">
+            {/* Mobile Search */}
+            <div className="px-3 py-2">
+              <SearchBar onSearch={handleSearch} placeholder="Search..." />
+            </div>
+            
             {navigation.map((item) => (
               <Link
                 key={item.name}
