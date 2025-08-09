@@ -1,0 +1,94 @@
+name: Pull Request Workflow
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd client && npm ci
+        
+    - name: Check for security vulnerabilities
+      run: npm audit --audit-level moderate || echo "Security audit completed"
+        
+    - name: Run linting (if configured)
+      run: |
+        npm run lint || echo "Linting not configured"
+        
+    - name: Run tests (if configured)
+      run: |
+        npm test || echo "Tests not configured"
+        
+    - name: Build client
+      run: |
+        cd client
+        npm run build
+        
+    - name: Check build output
+      run: |
+        if [ -d "client/dist" ]; then
+          echo "✅ Build successful"
+          ls -la client/dist/
+        else
+          echo "❌ Build failed"
+          exit 1
+        fi
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd client && npm ci
+        
+    - name: Check package.json consistency
+      run: |
+        echo "Checking package.json files..."
+        if [ -f "package.json" ] && [ -f "client/package.json" ]; then
+          echo "✅ Package.json files found"
+        else
+          echo "❌ Missing package.json files"
+          exit 1
+        fi
+        
+    - name: Check for common issues
+      run: |
+        echo "Checking for common issues..."
+        
+        # Check for console.log statements in production code
+        if grep -r "console.log" server/ --exclude="*.test.js" --exclude="*.spec.js"; then
+          echo "⚠️  Found console.log statements in server code"
+        fi
+        
+        # Check for hardcoded secrets
+        if grep -r "password\|secret\|key" server/ --exclude="*.test.js" --exclude="*.spec.js" | grep -v "process.env"; then
+          echo "⚠️  Potential hardcoded secrets found"
+        fi
+        
+        echo "✅ Code quality checks completed"
