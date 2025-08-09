@@ -6,6 +6,7 @@ import HomePage from './components/HomePage.jsx';
 import AboutPage from './components/AboutPage.jsx';
 import ContactPage from './components/ContactPage.jsx';
 import LoginPage from './components/LoginPage.jsx';
+import RegisterPage from './components/RegisterPage.jsx';
 import DashboardPage from './components/DashboardPage.jsx';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
                 <Route 
                   path="/dashboard" 
                   element={
