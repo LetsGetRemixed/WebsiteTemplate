@@ -119,3 +119,5 @@ All error responses follow this format:
 - General API: 100 requests per 15 minutes
 - Authentication: 5 requests per 15 minutes
 - Account Creation: 3 requests per hour
+
+

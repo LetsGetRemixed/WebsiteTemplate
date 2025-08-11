@@ -29,3 +29,4 @@ router.put('/:id', updateWord)
 router.delete('/:id', deleteWord)
 
 export default router
+
