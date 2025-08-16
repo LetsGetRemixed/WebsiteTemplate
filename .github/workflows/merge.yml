@@ -82,7 +82,7 @@ jobs:
         cd server/functions
         echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
         cd ../../
-        npx firebase-tools@latest deploy --only hosting,functions --project ${{ secrets.FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_GIT_SECRET }}
+        npx firebase-tools@latest deploy --only hosting,functions --force --project ${{ secrets.FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_GIT_SECRET }}
         
     - name: Notify deployment status
       if: always()
