@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-export const auth = async (req, res, next) => {
+const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
@@ -23,7 +23,7 @@ export const auth = async (req, res, next) => {
   }
 };
 
-export const adminAuth = async (req, res, next) => {
+const adminAuth = async (req, res, next) => {
   try {
     await auth(req, res, () => {});
     
@@ -36,5 +36,10 @@ export const adminAuth = async (req, res, next) => {
     res.status(403).json({ error: 'Access denied.' });
   }
 };
+
+module.exports = { auth, adminAuth };
+
+
+
 
 

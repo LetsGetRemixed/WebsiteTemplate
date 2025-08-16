@@ -1,23 +1,39 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import dotenv from 'dotenv';
-import { connectDB } from './config/database.js';
-import wordRoutes from './routes/wordRoutes.js';
-import authRoutes from './routes/authRoutes.js';
-import { errorHandler, notFound } from './middleware/errorHandler.js';
-import { apiLimiter } from './middleware/rateLimit.js';
-import path from 'path';
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const dotenv = require('dotenv');
+const { connectDB } = require('./config/database');
+const wordRoutes = require('./routes/wordRoutes');
+const authRoutes = require('./routes/authRoutes');
+const { errorHandler, notFound } = require('./middleware/errorHandler');
+const { apiLimiter } = require('./middleware/rateLimit');
+const path = require('path');
 
-dotenv.config();
+// Ensure .env is loaded from the project root even if started from the server directory
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+const allowedOrigins = [
+  process.env.CLIENT_URL || 'http://localhost:3000',
+  'http://127.0.0.1:3000'
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true
+  })
+);
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,10 +57,10 @@ app.get('/api/health', (req, res) => {
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/dist'));
-  
+  const clientDistPath = path.resolve(__dirname, '../client/dist');
+  app.use(express.static(clientDistPath));
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
+    res.sendFile(path.join(clientDistPath, 'index.html'));
   });
 }
 
@@ -54,11 +70,15 @@ app.use(errorHandler);
 
 const startServer = async () => {
   try {
-    await connectDB();
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+    });
+    // Connect to the database in the background so the server is immediately available
+    // This prevents client proxy ECONNREFUSED during slow DB server selection
+    connectDB().catch((err) => {
+      console.error('❌ Background DB connect failed:', err?.message || err);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);

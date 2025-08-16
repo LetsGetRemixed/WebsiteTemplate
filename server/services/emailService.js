@@ -1,8 +1,8 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer');
 
 class EmailService {
   constructor() {
-    this.transporter = nodemailer.createTransporter({
+    this.transporter = nodemailer.createTransport({
       service: process.env.EMAIL_SERVICE || 'gmail',
       auth: {
         user: process.env.EMAIL_USERNAME,
@@ -101,6 +101,9 @@ class EmailService {
   }
 }
 
-export default new EmailService();
+module.exports = new EmailService();
+
+
+
 
 

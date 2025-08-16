@@ -1,6 +1,6 @@
-import rateLimit from 'express-rate-limit';
+const rateLimit = require('express-rate-limit');
 
-export const apiLimiter = rateLimit({
+const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
   message: {
@@ -10,7 +10,7 @@ export const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-export const authLimiter = rateLimit({
+const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // Limit each IP to 5 requests per windowMs
   message: {
@@ -20,7 +20,7 @@ export const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-export const createAccountLimiter = rateLimit({
+const createAccountLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 3, // Limit each IP to 3 account creation requests per hour
   message: {
@@ -29,5 +29,10 @@ export const createAccountLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+module.exports = { apiLimiter, authLimiter, createAccountLimiter };
+
+
+
 
 

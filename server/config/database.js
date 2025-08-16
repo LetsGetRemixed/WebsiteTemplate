@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
-export const connectDB = async () => {
+const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/website-template'
     
@@ -26,6 +26,10 @@ export const connectDB = async () => {
     
   } catch (error) {
     console.error('❌ MongoDB connection failed:', error.message)
-    process.exit(1)
+    // Don't exit the process; allow the HTTP server to start so the client proxy doesn't get ECONNREFUSED
+    // You can retry connecting later or fix your MONGODB_URI
+    return
   }
 }
+
+module.exports = { connectDB }

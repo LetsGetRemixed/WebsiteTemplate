@@ -1,12 +1,12 @@
-import express from 'express'
-import {
+const express = require('express')
+const {
   getRandomWord,
   getAllWords,
   getWordById,
   createWord,
   updateWord,
   deleteWord
-} from '../controllers/wordController.js'
+} = require('../controllers/wordController')
 
 const router = express.Router()
 
@@ -28,5 +28,5 @@ router.put('/:id', updateWord)
 // DELETE /api/words/:id - Delete a word
 router.delete('/:id', deleteWord)
 
-export default router
+module.exports = router
 

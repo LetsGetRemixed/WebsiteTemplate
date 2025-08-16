@@ -1,8 +1,10 @@
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import Word from '../models/Word.js'
+const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+const path = require('path')
+const Word = require('../models/Word')
 
-dotenv.config()
+// Load .env from project root when running from server/scripts
+dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
 const sampleWords = [
   { word: 'awesome', category: 'adjective', definition: 'Extremely impressive or daunting' },
@@ -28,7 +30,7 @@ const sampleWords = [
   { word: 'unique', category: 'adjective', definition: 'Being the only one of its kind' },
   { word: 'valuable', category: 'adjective', definition: 'Worth a great deal of money' },
   { word: 'wonderful', category: 'adjective', definition: 'Inspiring delight, pleasure, or admiration' },
-  { word: 'excellent', category: 'adjective', definition: 'Extremely good; outstanding' },
+  { word: 'youthful', category: 'adjective', definition: 'Typical of young people; fresh and energetic' },
   { word: 'yearning', category: 'noun', definition: 'A feeling of intense longing for something' },
   { word: 'zealous', category: 'adjective', definition: 'Having or showing zeal; passionate' }
 ]

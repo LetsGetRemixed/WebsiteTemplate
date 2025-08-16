@@ -1,7 +1,7 @@
-import Word from '../models/Word.js'
+const Word = require('../models/Word')
 
 // Get a random word
-export const getRandomWord = async (req, res) => {
+exports.getRandomWord = async (req, res) => {
   try {
     const word = await Word.getRandomWord()
     
@@ -27,7 +27,7 @@ export const getRandomWord = async (req, res) => {
 }
 
 // Get all words
-export const getAllWords = async (req, res) => {
+exports.getAllWords = async (req, res) => {
   try {
     const { page = 1, limit = 10, category } = req.query
     
@@ -60,7 +60,7 @@ export const getAllWords = async (req, res) => {
 }
 
 // Get word by ID
-export const getWordById = async (req, res) => {
+exports.getWordById = async (req, res) => {
   try {
     const word = await Word.findById(req.params.id)
     
@@ -82,7 +82,7 @@ export const getWordById = async (req, res) => {
 }
 
 // Create a new word
-export const createWord = async (req, res) => {
+exports.createWord = async (req, res) => {
   try {
     const { word, category, definition } = req.body
     
@@ -123,7 +123,7 @@ export const createWord = async (req, res) => {
 }
 
 // Update a word
-export const updateWord = async (req, res) => {
+exports.updateWord = async (req, res) => {
   try {
     const { word, category, definition } = req.body
     
@@ -159,7 +159,7 @@ export const updateWord = async (req, res) => {
 }
 
 // Delete a word
-export const deleteWord = async (req, res) => {
+exports.deleteWord = async (req, res) => {
   try {
     const word = await Word.findByIdAndDelete(req.params.id)
     

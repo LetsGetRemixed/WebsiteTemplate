@@ -1,9 +1,9 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import { auth } from '../middleware/auth.js';
-import { authLimiter, createAccountLimiter } from '../middleware/rateLimit.js';
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const { auth } = require('../middleware/auth');
+const { authLimiter, createAccountLimiter } = require('../middleware/rateLimit');
 
 const router = express.Router();
 
@@ -155,6 +155,9 @@ router.put('/profile', auth, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
+
+
+
 
 
