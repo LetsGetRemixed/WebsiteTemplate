@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
 const AuthContext = createContext();
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
 const initialState = {
   user: null,
   token: localStorage.getItem('token'),
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +80,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +113,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch('/api/auth/me', {
+      const response = await fetch(`${API_BASE}/api/auth/me`, {
         headers: {
           Authorization: `Bearer ${state.token}`,
         },

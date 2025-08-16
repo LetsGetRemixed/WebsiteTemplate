@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
 const SearchBar = ({ onSearch, placeholder = "Search...", className = "" }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -29,7 +30,7 @@ const SearchBar = ({ onSearch, placeholder = "Search...", className = "" }) => {
       setLoading(true);
       try {
         // Simulate API call for suggestions
-        const response = await fetch(`/api/search/suggestions?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`${API_BASE}/api/search/suggestions?q=${encodeURIComponent(query)}`);
         if (response.ok) {
           const data = await response.json();
           setSuggestions(data.suggestions || []);

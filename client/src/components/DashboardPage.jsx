@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+const API_BASE = import.meta.env.VITE_BACKEND_URL || '';
 import { 
   UserCircleIcon, 
   CalendarIcon, 
@@ -20,7 +21,7 @@ const DashboardPage = () => {
     // Fetch dashboard data
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch('/api/dashboard', {
+        const response = await fetch(`${API_BASE}/api/dashboard`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },

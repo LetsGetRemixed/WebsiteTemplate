@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
-const connectDB = async () => {
+const connectDB = async (mongoUri) => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/website-template'
+    const mongoURI = mongoUri
     if (mongoose.connection.readyState === 1) {
       return
     }

@@ -74,10 +74,14 @@ jobs:
     - name: Build project
       run: |
         cd client
+        echo "VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }}" > .env
         npm run build
         
     - name: Deploy to Firebase
       run: |
+        cd server/functions
+        echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
+        cd ../../
         npx firebase-tools@latest deploy --only hosting,functions --project ${{ secrets.FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_GIT_SECRET }}
         
     - name: Notify deployment status

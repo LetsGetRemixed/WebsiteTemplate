@@ -16,6 +16,20 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Routes
+// Ensure DB is connected per request to avoid cold-start races
+app.use(async (req, res, next) => {
+  try {
+    const mongoUri = process.env.MONGODB_URI
+    if (!mongoUri) {
+      console.error('[Functions] Missing MONGODB_URI env var')
+    } else {
+      await connectDB(mongoUri)
+    }
+  } catch (e) {
+    console.error('[Functions] DB connect error', e?.message || e)
+  }
+  next()
+})
 app.use('/api/words', wordRoutes)
 
 // Health check endpoint
@@ -37,10 +51,5 @@ app.use((err, req, res, next) => {
 })
 
 // Export the Express app as a Firebase Function
-// Initialize DB before serving requests
-connectDB().then(() => {
-  console.log('[Functions] DB ready')
-}).catch(() => {})
-
 exports.api = functions.https.onRequest(app)
 

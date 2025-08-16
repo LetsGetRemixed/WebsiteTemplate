@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL || ''
+
 const HomePage = () => {
   const [word, setWord] = useState('Loading...')
   const [loading, setLoading] = useState(true)
@@ -11,7 +13,7 @@ const HomePage = () => {
 
   const fetchWord = async () => {
     try {
-      const response = await fetch('/api/words/random')
+      const response = await fetch(`${API_BASE}/api/words/random`)
       if (!response.ok) {
         throw new Error('Failed to fetch word')
       }
