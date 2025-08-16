@@ -21,7 +21,7 @@ const DashboardPage = () => {
     // Fetch dashboard data
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch(`${API_BASE}/api/dashboard`, {
+        const response = await fetch(`${API_BASE}/dashboard`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },

@@ -13,7 +13,7 @@ const HomePage = () => {
 
   const fetchWord = async () => {
     try {
-      const response = await fetch(`${API_BASE}/api/words/random`)
+      const response = await fetch(`${API_BASE}/words/random`)
       if (!response.ok) {
         throw new Error('Failed to fetch word')
       }

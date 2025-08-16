@@ -30,7 +30,7 @@ const SearchBar = ({ onSearch, placeholder = "Search...", className = "" }) => {
       setLoading(true);
       try {
         // Simulate API call for suggestions
-        const response = await fetch(`${API_BASE}/api/search/suggestions?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`${API_BASE}/search/suggestions?q=${encodeURIComponent(query)}`);
         if (response.ok) {
           const data = await response.json();
           setSuggestions(data.suggestions || []);
