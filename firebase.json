@@ -29,7 +29,7 @@
     ]
   },
   "functions": {
-    "source": "server/functions",
+    "source": "server",
     "runtime": "nodejs20"
   },
   "firestore": {
