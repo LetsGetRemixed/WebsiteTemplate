@@ -37,5 +37,10 @@ app.use((err, req, res, next) => {
 })
 
 // Export the Express app as a Firebase Function
+// Initialize DB before serving requests
+connectDB().then(() => {
+  console.log('[Functions] DB ready')
+}).catch(() => {})
+
 exports.api = functions.https.onRequest(app)
 
