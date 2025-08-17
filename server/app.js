@@ -55,13 +55,24 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rate limiting
 app.use('/api/', apiLimiter);
+app.use('/', apiLimiter);
 
-// API routes
+// API routes (support both Hosting rewrite (/api/...) and direct CF URL (/...))
 app.use('/api/words', wordRoutes);
+app.use('/words', wordRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 
-// Health check
+// Health check (both paths)
 app.get('/api/health', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+  });
+});
+app.get('/health', (req, res) => {
   res.json({
     success: true,
     message: 'Server is running',
