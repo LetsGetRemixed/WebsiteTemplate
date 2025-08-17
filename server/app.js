@@ -109,6 +109,8 @@ const debugEnvHandler = (req, res) => {
 if (isDebugEnvEndpointEnabled) {
   app.get('/api/__env', debugEnvHandler)
   app.get('/__env', debugEnvHandler)
+  app.get('/api/env', debugEnvHandler)
+  app.get('/env', debugEnvHandler)
 }
 
 // Error handling middleware
