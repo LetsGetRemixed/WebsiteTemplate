@@ -17,16 +17,33 @@ const app = express();
 
 // Security & basic middleware
 app.use(helmet());
-const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:3000',
+const allowedOriginsFromEnv = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const defaultAllowedOrigins = [
+  'http://localhost:3000',
   'http://127.0.0.1:3000'
+];
+
+const allowedOriginPatterns = [
+  /^https?:\/\/.*\.web\.app$/,
+  /^https?:\/\/.*\.firebaseapp\.com$/,
+  /^https?:\/\/.*\.cloudfunctions\.net$/
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (
+        allowedOriginsFromEnv.includes(origin) ||
+        defaultAllowedOrigins.includes(origin) ||
+        allowedOriginPatterns.some((re) => re.test(origin))
+      ) {
+        return callback(null, true);
+      }
       return callback(new Error('Not allowed by CORS'));
     },
     credentials: true
