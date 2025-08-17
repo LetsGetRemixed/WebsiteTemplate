@@ -69,7 +69,8 @@ jobs:
       run: |
         npm ci || npm install
         cd client && (npm ci || npm install)
-        cd ../server/functions && (npm ci || npm install)
+        cd server && (npm ci || npm install)
+        cd ../
         
     - name: Build project
       run: |
