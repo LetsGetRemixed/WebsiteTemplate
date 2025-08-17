@@ -85,10 +85,37 @@ app.get('/health', (req, res) => {
 app.get(['/api/db-status', '/db-status'], async (req, res) => {
   try {
     const mongoose = require('mongoose')
+    const { connectDB } = require('./config/database')
+    
     const state = mongoose.connection.readyState
     const states = ['disconnected', 'connected', 'connecting', 'disconnecting']
     const status = states[state] || String(state)
     const collections = status === 'connected' ? Object.keys(mongoose.connection.collections || {}) : []
+    
+    // Try to force a connection if disconnected
+    if (state === 0) {
+      console.log('[DB-STATUS] Attempting connection...')
+      try {
+        await connectDB()
+        const newState = mongoose.connection.readyState
+        const newStatus = states[newState] || String(newState)
+        return res.json({ 
+          success: true, 
+          status: newStatus, 
+          collections: newState === 1 ? Object.keys(mongoose.connection.collections || {}) : [],
+          attempted_reconnect: true
+        })
+      } catch (connErr) {
+        return res.json({ 
+          success: false, 
+          status: 'connection_failed', 
+          error: connErr.message,
+          mongodb_uri_present: !!process.env.MONGODB_URI,
+          uri_preview: process.env.MONGODB_URI ? 'mongodb+srv://***' : 'missing'
+        })
+      }
+    }
+    
     res.json({ success: true, status, collections })
   } catch (e) {
     res.status(500).json({ success: false, error: e.message })
