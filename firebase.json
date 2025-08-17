@@ -28,10 +28,13 @@
       }
     ]
   },
-  "functions": {
-    "source": "server",
-    "runtime": "nodejs20"
-  },
+  "functions": [
+    {
+      "source": "server",
+      "codebase": "default",
+      "runtime": "nodejs20"
+    }
+  ],
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
