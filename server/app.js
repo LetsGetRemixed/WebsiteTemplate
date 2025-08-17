@@ -81,6 +81,36 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Debug: masked environment inspection (enable by setting DEBUG_ENV_ENDPOINT=true)
+const isDebugEnvEndpointEnabled = (process.env.DEBUG_ENV_ENDPOINT || '').toLowerCase() === 'true'
+const mask = (value) => {
+  if (!value) return null
+  const str = String(value)
+  if (str.length <= 8) return '****'
+  return `${str.slice(0, 4)}***${str.slice(-4)}`
+}
+
+const collectEnv = () => ({
+  NODE_ENV: process.env.NODE_ENV || null,
+  CLIENT_URL: process.env.CLIENT_URL || null,
+  MONGODB_URI: mask(process.env.MONGODB_URI),
+  JWT_SECRET: mask(process.env.JWT_SECRET),
+  EMAIL_SERVICE: process.env.EMAIL_SERVICE || null,
+  EMAIL_USERNAME: mask(process.env.EMAIL_USERNAME),
+  EMAIL_FROM: process.env.EMAIL_FROM || null,
+})
+
+const debugEnvHandler = (req, res) => {
+  const data = collectEnv()
+  console.log('[ENV DEBUG]', Object.fromEntries(Object.entries(data).map(([k, v]) => [k, v ?? null])))
+  res.json({ success: true, env: data })
+}
+
+if (isDebugEnvEndpointEnabled) {
+  app.get('/api/__env', debugEnvHandler)
+  app.get('/__env', debugEnvHandler)
+}
+
 // Error handling middleware
 app.use(notFound);
 app.use(errorHandler);
