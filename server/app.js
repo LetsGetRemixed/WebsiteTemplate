@@ -81,6 +81,20 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Database status endpoint to help diagnose Atlas connectivity
+app.get(['/api/db-status', '/db-status'], async (req, res) => {
+  try {
+    const mongoose = require('mongoose')
+    const state = mongoose.connection.readyState
+    const states = ['disconnected', 'connected', 'connecting', 'disconnecting']
+    const status = states[state] || String(state)
+    const collections = status === 'connected' ? Object.keys(mongoose.connection.collections || {}) : []
+    res.json({ success: true, status, collections })
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message })
+  }
+})
+
 // Debug: masked environment inspection (enable by setting DEBUG_ENV_ENDPOINT=true)
 const isDebugEnvEndpointEnabled = (process.env.DEBUG_ENV_ENDPOINT || '').toLowerCase() === 'true'
 const mask = (value) => {
