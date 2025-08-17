@@ -81,6 +81,8 @@ jobs:
       run: |
         cd server
         echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
+        echo "CLIENT_URL=${{ secrets.CLIENT_URL }}" >> .env
+        echo "DEBUG_ENV_ENDPOINT=${{ secrets.DEBUG_ENV_ENDPOINT }}" >> .env
         cd ../
         npx firebase-tools@latest deploy --only hosting,functions --force --project ${{ secrets.FIREBASE_PROJECT_ID }} --token ${{ secrets.FIREBASE_GIT_SECRET }}
         
